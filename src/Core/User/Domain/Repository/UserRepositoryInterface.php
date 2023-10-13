@@ -16,5 +16,7 @@ interface UserRepositoryInterface
     /**
      * @return User[]
      */
-    public function getInactiveUsers(UserStatus $status): array;
+    public function getUser(UserStatus $status): array;
+
+    public function createUser(User $user): void;
 }

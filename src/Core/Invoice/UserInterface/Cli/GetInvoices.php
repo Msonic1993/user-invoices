@@ -30,7 +30,7 @@ class GetInvoices extends Command
     {
         $invoices = $this->bus->dispatch(new GetInvoicesByStatusAndAmountGreaterQuery(
             new InvoiceStatus($input->getArgument('status')),
-            new InvoiceAmount($input->getArgument('amount'))
+            new InvoiceAmount((int) $input->getArgument('amount'))
         ));
 
         /** @var InvoiceDTO $invoice */
