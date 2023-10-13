@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Invoice\UserInterface\Cli;
 
 use App\Common\Bus\QueryBusInterface;
 use App\Core\Invoice\Application\DTO\InvoiceDTO;
 use App\Core\Invoice\Application\Query\GetInvoicesByStatusAndAmountGreater\GetInvoicesByStatusAndAmountGreaterQuery;
+use App\Core\Invoice\Domain\ValueObject\Status\InvoiceAmount;
+use App\Core\Invoice\Domain\ValueObject\Status\InvoiceStatus;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -25,13 +29,13 @@ class GetInvoices extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $invoices = $this->bus->dispatch(new GetInvoicesByStatusAndAmountGreaterQuery(
-            $input->getArgument('status'),
-            $input->getArgument('amount')
+            new InvoiceStatus($input->getArgument('status')),
+            new InvoiceAmount($input->getArgument('amount'))
         ));
 
         /** @var InvoiceDTO $invoice */
         foreach ($invoices as $invoice) {
-            $output->writeln($invoice->id);
+            $output->writeln((string) $invoice->id);
         }
 
         return Command::SUCCESS;
